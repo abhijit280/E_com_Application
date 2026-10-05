@@ -21,7 +21,7 @@ public class EcommerceApplication {
 	private static CustomerService customerService;
 	private static CartService cartService;
 	private static OrderService orderService;
-
+	private static final int GUEST_ID = -1;
 	public static void main(String[] args) {
 		repositoryAndServiceObject();
 		hardCodedData();
@@ -31,7 +31,8 @@ public class EcommerceApplication {
 			System.out.println("====== E-COMMERCE MANAGEMENT SYSTEM ======  ");
 			System.out.println("1. Admin");
 			System.out.println("2. Customer");
-			System.out.println("3. Exit");
+			System.out.println("3. Guest User");
+			System.out.println("4. Exit");
 			System.out.print("Enter choice: ");
 
 			int choice = readIntInput();
@@ -43,6 +44,10 @@ public class EcommerceApplication {
 				handleCustomerEntryMenu();
 				break;
 			case 3:
+				System.out.println("=========== Guest ===========");
+				guestUser();
+				break;
+			case 4:
 				System.out.println("Thank you for using the application. Goodbye!");
 				running = false;
 				break;
@@ -176,6 +181,69 @@ public class EcommerceApplication {
 		}
 	}
 
+	// guest portal
+	private static void guestUser() {
+	    boolean back = false;
+	    while (!back) {
+	        System.out.println("\n----- Guest Portal -----");
+	        System.out.println("1. View Products");
+	        System.out.println("2. Search Product");
+	        System.out.println("3. Add Product to Cart");
+	        System.out.println("4. View Cart");
+	        System.out.println("5. Remove Product from Cart");
+	        System.out.println("6. Place Order (Login required)");
+	        System.out.println("7. Back");
+	        System.out.print("Enter choice: ");
+
+	        int choice = readIntInput();
+	        try {
+	            switch (choice) {
+	            case 1:
+	                productService.getAllProducts().forEach(System.out::println);
+	                break;
+	            case 2:
+	                handleSearchProduct();
+	                break;
+	            case 3:
+	                System.out.print("Enter Product ID: ");
+	                int pid = readIntInput();
+	                System.out.print("Enter Quantity: ");
+	                int qty = readIntInput();
+	                cartService.addToCart(GUEST_ID, pid, qty);
+	                System.out.println("Added to cart.");
+	                break;
+	            case 4:
+	                List<CartItem> cart = cartService.getCart(GUEST_ID);
+	                if (cart.isEmpty()) {
+	                    System.out.println("Cart is empty.");
+	                } else {
+	                    cart.forEach(System.out::println);
+	                    System.out.println("Total Cart Value: " + cartService.calculateCartTotal(GUEST_ID));
+	                }
+	                break;
+	            case 5:
+	                System.out.print("Enter Product ID to remove: ");
+	                int remPid = readIntInput();
+	                cartService.removeFromCart(GUEST_ID, remPid);
+	                System.out.println("Item removed from cart.");
+	                break;
+	            case 6:
+	                if (guestPlaceOrder()) {
+	                    back = true;          // order done, return to main menu
+	                }
+	                break;
+	            case 7:
+	                cartService.clearCart(GUEST_ID);   // guest cart is not kept
+	                back = true;
+	                break;
+	            default:
+	                System.out.println("Invalid selection.");
+	            }
+	        } catch (Exception e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
+	    }
+	}
 	// Customer Navigation >>>>>>>>>
 	private static void handleCustomerEntryMenu() {
 		boolean back = false;
@@ -410,5 +478,51 @@ public class EcommerceApplication {
 		System.out.println("========================================");
 		System.out.println("       Thank you for your order!        ");
 		System.out.println("========================================");
+	}
+	// guest must login (or register) before the order is placed
+	private static boolean guestPlaceOrder() throws InterruptedException {
+	    if (cartService.getCart(GUEST_ID).isEmpty()) {
+	        System.out.println("Cart is empty. Add products first.");
+	        return false;
+	    }
+
+	    System.out.println("\nLogin is required to place your order.");
+	    Customer customer = null;
+
+	    // keep asking until login succeeds or the guest cancels
+	    while (customer == null) {
+	        System.out.println("1. Login | 2. Register | 3. Cancel");
+	        System.out.print("Enter choice: ");
+	        int option = readIntInput();
+
+	        if (option == 3) {
+	            return false;
+	        }
+	        if (option != 1 && option != 2) {
+	            System.out.println("Invalid selection.");
+	            continue;
+	        }
+	        try {
+	            if (option == 2) {
+	                registerCustomerUI();
+	            }
+	            System.out.print("Enter Customer ID to Login: ");
+	            customer = customerService.getCustomerById(readIntInput());
+	        } catch (Exception e) {
+	            System.out.println("Error: " + e.getMessage());
+	        }
+	    }
+
+	    // login completed: move guest cart items to this customer's cart
+	    cartService.moveCart(GUEST_ID, customer.getCustomerId());
+	    System.out.println("Welcome, " + customer.getName() + ". Your guest cart has been moved to your account.");
+
+	    // place the order with the normal flow
+	    Order order = orderService.placeOrder(customer.getCustomerId());
+	    System.out.println("Order placed successfully.");
+	    System.out.println("Receipt generating...");
+	    Thread.sleep(2000);
+	    printOrderReceipt(order, customer);
+	    return true;
 	}
 }

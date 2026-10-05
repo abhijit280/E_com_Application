@@ -103,4 +103,12 @@ public class CartService {
             cart.clear();
         }
     }
+ // move all items from one cart to another (guest cart -> customer cart)
+    public void moveCart(int fromId, int toId) {
+        List<CartItem> fromCart = getCart(fromId);
+        for (CartItem item : new ArrayList<>(fromCart)) {
+            addToCart(toId, item.getProductId(), item.getQuantity());   // merges quantity and checks stock
+            removeFromCart(fromId, item.getProductId());
+        }
+    }
 }

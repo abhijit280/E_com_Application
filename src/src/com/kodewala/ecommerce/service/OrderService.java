@@ -74,7 +74,7 @@ public class OrderService {
         if (order.getOrderStatus() == OrderStatus.DELIVERED || order.getOrderStatus() == OrderStatus.CANCELLED) {
             throw new InvalidOrderException("Order cannot be cancelled in status: " + order.getOrderStatus());
         }
-        // Restore inventory
+        // Restore product
         for (CartItem item : order.getItems()) {
             Product product = productService.getProductById(item.getProductId());
             productService.updateProductQuantity(product.getProductId(), product.getQuantity() + item.getQuantity());
