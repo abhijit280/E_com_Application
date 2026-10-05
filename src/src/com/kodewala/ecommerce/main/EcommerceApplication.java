@@ -233,7 +233,7 @@ public class EcommerceApplication {
 	                }
 	                break;
 	            case 7:
-	                cartService.clearCart(GUEST_ID);   // guest cart is not kept
+//	                cartService.clearCart(GUEST_ID);   // guest cart is not kept
 	                back = true;
 	                break;
 	            default:
@@ -263,11 +263,18 @@ public class EcommerceApplication {
 				System.out.print("Enter Customer ID to Login: ");
 				int cid = readIntInput();
 				try {
-					Customer customer = customerService.getCustomerById(cid);
-					System.out.println("Welcome back, " + customer.getName());
-					handleCustomerOperations(customer);
+				    Customer customer = customerService.getCustomerById(cid);
+
+				    // move guest cart items (if any) into this customer's cart
+				    if (!cartService.getCart(GUEST_ID).isEmpty()) {
+				        cartService.moveCart(GUEST_ID, customer.getCustomerId());
+				        System.out.println("Your guest cart items have been added to your cart.");
+				    }
+
+				    System.out.println("Welcome back, " + customer.getName());
+				    handleCustomerOperations(customer);
 				} catch (Exception e) {
-					System.out.println("Error: " + e.getMessage());
+				    System.out.println("Error: " + e.getMessage());
 				}
 				break;
 			case 3:
@@ -507,7 +514,8 @@ public class EcommerceApplication {
 	                registerCustomerUI();
 	            }
 	            System.out.print("Enter Customer ID to Login: ");
-	            customer = customerService.getCustomerById(readIntInput());
+	            int cusId = readIntInput();
+	            customer = customerService.getCustomerById(cusId);
 	        } catch (Exception e) {
 	            System.out.println("Error: " + e.getMessage());
 	        }
