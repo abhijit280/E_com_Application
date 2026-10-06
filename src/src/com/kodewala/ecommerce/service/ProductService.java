@@ -36,13 +36,13 @@ public class ProductService {
  // customer in serarch oprt on main
     public List<Product> searchByCategory(String category) {
         return productRepository.getAllProducts().stream()
-                .filter(p -> p.getCategory().equalsIgnoreCase(category))
+                .filter(p -> p.getCategory().toLowerCase().contains(category.toLowerCase()))
                 .collect(Collectors.toList());
     }
 // customer in serarch oprt on main
     public List<Product> searchByBrand(String brand) {
         return productRepository.getAllProducts().stream()
-                .filter(p -> p.getBrand().equalsIgnoreCase(brand))
+                .filter(p -> p.getBrand().toLowerCase().contains(brand.toLowerCase()))
                 .collect(Collectors.toList());
     }
 // customer in serarch oprt on main

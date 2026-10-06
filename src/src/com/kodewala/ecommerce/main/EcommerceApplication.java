@@ -2,7 +2,6 @@ package src.com.kodewala.ecommerce.main;
 
 import java.util.List;
 import java.util.Scanner;
-
 import src.com.kodewala.ecommerce.model.CartItem;
 import src.com.kodewala.ecommerce.model.Customer;
 import src.com.kodewala.ecommerce.model.Order;
@@ -21,7 +20,7 @@ public class EcommerceApplication {
 	private static CustomerService customerService;
 	private static CartService cartService;
 	private static OrderService orderService;
-	private static final int GUEST_ID = -1;
+	private static final int GUEST_ID = 1;
 	public static void main(String[] args) {
 		repositoryAndServiceObject();
 		hardCodedData();
@@ -72,21 +71,21 @@ public class EcommerceApplication {
 		productService.addProduct(new Product(101, "iPhone 16", "Electronics", "Apple", 79999.0, 10));
 		productService.addProduct(new Product(102, "Galaxy S24", "Electronics", "Samsung", 74999.0, 15));
 		productService.addProduct(new Product(103, "Running Shoes", "Footwear", "Nike", 4999.0, 20));
-		productService.addProduct(new Product(104, "Mechanical Keyboard", "Accessories", "Keychron", 6999.0, 8));
+		productService.addProduct(new Product(104, "Mechanical Keyboard", "Electronics", "Keychron", 6999.0, 8));
 		productService.addProduct(new Product(105, "MacBook Air M3", "Electronics", "Apple", 114999.0, 7));
 		productService.addProduct(new Product(106, "Sony WH-1000XM5", "Audio", "Sony", 29999.0, 12));
-		productService.addProduct(new Product(107, "Dell Inspiron 15", "Laptops", "Dell", 65999.0, 9));
-		productService.addProduct(new Product(108, "Logitech MX Master 3S", "Accessories", "Logitech", 8999.0, 14));
+		productService.addProduct(new Product(107, "Dell Inspiron 15", "Electronics", "Dell", 65999.0, 9));
+		productService.addProduct(new Product(108, "Logitech MX Master 3S", "Electronics", "Logitech", 8999.0, 14));
 		productService.addProduct(new Product(109, "AirPods Pro 2", "Audio", "Apple", 24999.0, 18));
 		productService.addProduct(new Product(110, "Nike Air Max", "Footwear", "Nike", 8999.0, 16));
 		productService.addProduct(new Product(111, "OnePlus 13", "Electronics", "OnePlus", 69999.0, 11));
-		productService.addProduct(new Product(112, "Samsung Galaxy Tab S9", "Tablets", "Samsung", 67999.0, 6));
+		productService.addProduct(new Product(112, "Samsung Galaxy Tab S9", "Electronics", "Samsung", 67999.0, 6));
 		productService.addProduct(new Product(113, "Adidas Ultraboost", "Footwear", "Adidas", 12999.0, 13));
 		productService.addProduct(new Product(114, "JBL Flip 6", "Audio", "JBL", 9999.0, 20));
-		productService.addProduct(new Product(115, "HP Pavilion 14", "Laptops", "HP", 61999.0, 8));
+		productService.addProduct(new Product(115, "HP Pavilion 14", "Electronics", "HP", 61999.0, 8));
 		productService.addProduct(new Product(116, "Canon EOS 1500D", "Cameras", "Canon", 42999.0, 5));
-		productService.addProduct(new Product(117, "Mi Smart TV 55", "Television", "Xiaomi", 44999.0, 10));
-		productService.addProduct(new Product(118, "Apple Watch Series 10", "Wearables", "Apple", 46999.0, 9));
+		productService.addProduct(new Product(117, "Mi Smart TV 55", "Electronics", "Xiaomi", 44999.0, 10));
+		productService.addProduct(new Product(118, "Apple Watch Series 10", "Electronics", "Apple", 46999.0, 9));
 		productService.addProduct(new Product(119, "Kindle Paperwhite", "Books", "Amazon", 14999.0, 15));
 		productService.addProduct(new Product(120, "Backpack", "Accessories", "Wildcraft", 2999.0, 25));
 
